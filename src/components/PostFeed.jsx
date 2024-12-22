@@ -1,6 +1,6 @@
 // src/components/PostFeed.jsx
 import { useState, useEffect } from 'react';
-import { db } from '../config/firebase';
+import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 const PostFeed = () => {

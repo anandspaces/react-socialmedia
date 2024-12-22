@@ -1,33 +1,37 @@
-// src/pages/Home.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../config/firebase';
-import { signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth, googleAuthProvider } from '../firebase'; // Import googleAuthProvider from firebase.js
+import { signOut, signInWithPopup } from 'firebase/auth'; // Import Firebase Auth methods
 import CreatePostForm from '../components/CreatePostForm';
 import PostFeed from '../components/PostFeed';
+import LogoutButton from '../components/LogoutButton'; // Reusable LogoutButton component
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser);
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+
     return () => unsubscribe();
   }, []);
 
+  // Function to handle Google login
   const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);  // Update the user state with the authenticated user
+      const result = await signInWithPopup(auth, googleAuthProvider); // Sign in using Google popup
+      setUser(result.user); // Set the user data
     } catch (error) {
       console.error('Error during Google login:', error);
     }
   };
 
+  // Function to handle logout
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await signOut(auth); // Sign the user out
       navigate('/login'); // Redirect to login page after logout
     } catch (error) {
       console.error('Error logging out: ', error);
@@ -40,7 +44,7 @@ const Home = () => {
       {user ? (
         <div>
           <h2>Hello, {user.displayName || 'User'}</h2>
-          <button onClick={handleLogout}>Logout</button>
+          <LogoutButton onClick={handleLogout} /> {/* Use reusable LogoutButton */}
           <CreatePostForm />
           <PostFeed />
         </div>

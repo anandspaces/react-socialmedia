@@ -1,6 +1,6 @@
 // src/components/CreatePostForm.jsx
 import { useState } from 'react';
-import { db, auth } from '../config/firebase';
+import { db, auth } from '../firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 const CreatePostForm = () => {
