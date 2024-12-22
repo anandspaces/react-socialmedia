@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../config/firebase';
+import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import CreatePostForm from '../components/CreatePostForm';
 import PostFeed from '../components/PostFeed';
