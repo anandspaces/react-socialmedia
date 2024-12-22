@@ -1,8 +1,8 @@
 // src/pages/Home.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { signOut } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import CreatePostForm from '../components/CreatePostForm';
 import PostFeed from '../components/PostFeed';
 
@@ -14,6 +14,16 @@ const Home = () => {
     const unsubscribe = auth.onAuthStateChanged(setUser);
     return () => unsubscribe();
   }, []);
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);  // Update the user state with the authenticated user
+    } catch (error) {
+      console.error('Error during Google login:', error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -35,7 +45,10 @@ const Home = () => {
           <PostFeed />
         </div>
       ) : (
-        <p>Please log in to see your feed.</p>
+        <div>
+          <p>Please log in to see your feed.</p>
+          <button onClick={handleGoogleLogin}>Login with Google</button>
+        </div>
       )}
     </div>
   );
