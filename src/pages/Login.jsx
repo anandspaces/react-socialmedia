@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth, googleAuthProvider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { Button, Container } from '@mui/material';
 

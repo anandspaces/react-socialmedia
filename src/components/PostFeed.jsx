@@ -2,21 +2,26 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { Container } from '@mui/material';
+import { Container, CircularProgress, Paper, Typography, Box } from '@mui/material';
 
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        const postsArray = querySnapshot.docs.map((doc) => doc.data());
+        const postsArray = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setPosts(postsArray);
-      } catch (error) {
-        console.error('Error fetching posts: ', error);
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setError('Failed to load posts. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -24,16 +29,58 @@ const PostFeed = () => {
     fetchPosts();
   }, []);
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Typography variant="body1" color="error" align="center">
+          {error}
+        </Typography>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      {loading ? (
-        <p>Loading posts...</p>
+      {posts.length === 0 ? (
+        <Typography variant="body1" align="center">
+          No posts available.
+        </Typography>
       ) : (
-        posts.map((post, index) => (
-          <Container key={index} className="post-card">
-            <p>{post.content}</p>
-            <small>{new Date(post.createdAt.seconds * 1000).toLocaleString()}</small>
-          </Container>
+        posts.map((post) => (
+          <Paper
+            key={post.id}
+            elevation={3}
+            sx={{
+              padding: 2,
+              marginBottom: 2,
+              borderRadius: 2,
+              backgroundColor: 'background.paper',
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              {post.title || 'Untitled Post'}
+            </Typography>
+            <Typography variant="body1">{post.content}</Typography>
+            {post.author && (
+              <Typography variant="subtitle2" color="text.secondary">
+                Posted by: {post.author}
+              </Typography>
+            )}
+            <Typography variant="caption" color="text.secondary">
+              {new Intl.DateTimeFormat('en-US', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              }).format(new Date(post.createdAt.seconds * 1000))}
+            </Typography>
+          </Paper>
         ))
       )}
     </Container>
