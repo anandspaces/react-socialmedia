@@ -5,6 +5,19 @@ import { signOut, signInWithPopup } from 'firebase/auth'; // Import Firebase Aut
 import CreatePostForm from '../components/CreatePostForm';
 import PostFeed from '../components/PostFeed';
 import LogoutButton from '../components/LogoutButton'; // Reusable LogoutButton component
+import { styled } from '@mui/material/styles';
+import { Box, Container, Grid2, Paper } from '@mui/material';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -39,22 +52,30 @@ const Home = () => {
   };
 
   return (
-    <div className="home">
-      <h1>Welcome to Social Media</h1>
+    <Container>
+      <h1>Welcome to Samazik Sandesh</h1>
       {user ? (
-        <div>
-          <h2>Hello, {user.displayName || 'User'}</h2>
-          <LogoutButton onClick={handleLogout} /> {/* Use reusable LogoutButton */}
+        <Container>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid2 container spacing={2} columns={16}>
+              <Grid2 size={8}>
+                <h2>Hello, {user.displayName || 'User'}</h2>
+              </Grid2>
+              <Grid2 size={8}>
+                <Item><LogoutButton onClick={handleLogout} /> {/* Use reusable LogoutButton */}</Item>
+              </Grid2>
+            </Grid2>
+          </Box>
           <CreatePostForm />
           <PostFeed />
-        </div>
+        </Container>
       ) : (
-        <div>
+        <Container>
           <p>Please log in to see your feed.</p>
           <button onClick={handleGoogleLogin}>Login with Google</button>
-        </div>
+        </Container>
       )}
-    </div>
+    </Container>
   );
 };
 

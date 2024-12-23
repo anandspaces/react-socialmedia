@@ -51,6 +51,8 @@ const CreatePostForm = () => {
         bgcolor: 'background.paper',
         borderRadius: 2,
         boxShadow: 1,
+        marginBottom:10,
+        marginTop:10,
       }}
     >
       <Typography variant="h6" gutterBottom>
