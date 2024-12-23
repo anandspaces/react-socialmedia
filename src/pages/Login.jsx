@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { Button, Container } from '@mui/material';
 
 const Login = () => {
   const [error, setError] = useState(null);
@@ -20,11 +21,11 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
+    <Container>
       <h1>Login to Social Media</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button onClick={handleGoogleLogin}>Login with Google</button>
-    </div>
+      <Button onClick={handleGoogleLogin}>Login with Google</Button>
+    </Container>
   );
 };
 

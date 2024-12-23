@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { Container } from '@mui/material';
 
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
@@ -24,18 +25,18 @@ const PostFeed = () => {
   }, []);
 
   return (
-    <div>
+    <Container>
       {loading ? (
         <p>Loading posts...</p>
       ) : (
         posts.map((post, index) => (
-          <div key={index} className="post-card">
+          <Container key={index} className="post-card">
             <p>{post.content}</p>
             <small>{new Date(post.createdAt.seconds * 1000).toLocaleString()}</small>
-          </div>
+          </Container>
         ))
       )}
-    </div>
+    </Container>
   );
 };
 

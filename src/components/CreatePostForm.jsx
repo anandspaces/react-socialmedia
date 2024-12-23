@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { db, auth } from '../firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { Button } from '@mui/material';
 
 const CreatePostForm = () => {
   const [newPost, setNewPost] = useState('');
@@ -17,6 +18,7 @@ const CreatePostForm = () => {
         createdAt: serverTimestamp(),
       });
       setNewPost('');
+      console.log(`Post created successfully: ${auth.currentUser.uid}`)
     } catch (error) {
       console.error('Error creating post: ', error);
     }
@@ -31,7 +33,7 @@ const CreatePostForm = () => {
         rows="4"
         cols="50"
       />
-      <button type="submit">Post</button>
+      <Button type="submit">Post</Button>
     </form>
   );
 };
