@@ -66,7 +66,7 @@ const PostFeed = () => {
             }}
           >
             <Typography variant="h6" gutterBottom>
-              {post.title || 'Untitled Post'}
+              {post.title || ''}
             </Typography>
             <Typography variant="body1">{post.content}</Typography>
             {post.author && (
