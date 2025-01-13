@@ -24,6 +24,7 @@ const CreatePostForm = () => {
         content: newPost,
         userId: auth.currentUser?.uid || 'Anonymous',
         createdAt: serverTimestamp(),
+        is_deleted: false,
       });
       setNewPost('');
       console.log(`Post created successfully: ${auth.currentUser?.uid}`);

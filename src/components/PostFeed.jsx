@@ -1,13 +1,24 @@
 // src/components/PostFeed.jsx
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { Container, CircularProgress, Paper, Typography, Box } from '@mui/material';
 
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // handle delete used
+  const handleDelete = async (postId) => {
+    try {
+      const postRef = doc(db, "posts", postId);
+      await updateDoc(postRef, { is_deleted: true });
+      console.log(`Post deleted successfully: ${postId}`);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -80,6 +91,9 @@ const PostFeed = () => {
                 timeStyle: 'short',
               }).format(new Date(post.createdAt.seconds * 1000))}
             </Typography>
+            <button onClick={() => handleDelete(post.id)} style={{ color: 'red' }}>
+              Delete
+            </button>
           </Paper>
         ))
       )}
