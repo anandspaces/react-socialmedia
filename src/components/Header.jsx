@@ -1,47 +1,31 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  InputBase,
-  Avatar,
-  Menu,
-  MenuItem,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-} from "@mui/material";
-import {
   AiOutlineHome,
   AiOutlineMessage,
   AiOutlineBell,
   AiOutlineMenu,
   AiOutlineSearch,
   AiOutlineClose,
+  AiOutlineUser,
+  AiOutlineSetting,
+  AiOutlineLogout,
 } from "react-icons/ai";
 
 export default function Header() {
-  const [anchorEl, setAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const open = Boolean(anchorEl);
-
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
   const toggleMobileMenu = () => setMobileOpen(!mobileOpen);
 
   return (
     <>
       {/* Top Navigation Bar */}
-      <AppBar position="fixed" className="bg-white shadow-md z-50">
-        <Toolbar className="flex justify-between items-center px-4">
+      <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+        <div className="flex items-center justify-between px-4 py-3 md:px-8">
           {/* Left: Logo + Mobile Menu */}
           <div className="flex items-center space-x-3">
-            <IconButton className="sm:hidden" onClick={toggleMobileMenu}>
-              <AiOutlineMenu className="text-gray-700 text-xl" />
-            </IconButton>
+            <button onClick={toggleMobileMenu} className="sm:hidden">
+              <AiOutlineMenu className="text-gray-700 text-2xl" />
+            </button>
             <img src="/logo.png" alt="Logo" className="h-10 w-10" />
             <span className="text-lg font-bold text-gray-800 hidden sm:block">
               SocialApp
@@ -49,69 +33,78 @@ export default function Header() {
           </div>
 
           {/* Center: Search Bar (Hidden on Small Screens) */}
-          <div className="relative hidden md:flex items-center bg-gray-100 rounded-md px-3 py-1 w-1/3">
+          <div className="relative hidden md:flex items-center bg-gray-100 rounded-md px-3 py-2 w-1/3">
             <AiOutlineSearch className="text-gray-500 mr-2 text-lg" />
-            <InputBase
+            <input
+              type="text"
               placeholder="Search..."
-              className="text-gray-700 outline-none flex-1"
+              className="bg-transparent outline-none text-gray-700 w-full"
             />
           </div>
 
           {/* Right: Icons + Profile */}
           <div className="flex items-center space-x-4">
-            <IconButton>
-              <AiOutlineHome className="text-gray-700 text-xl" />
-            </IconButton>
-            <IconButton>
-              <AiOutlineMessage className="text-gray-700 text-xl" />
-            </IconButton>
-            <IconButton>
-              <AiOutlineBell className="text-gray-700 text-xl" />
-            </IconButton>
+            <Link to="/home" className="hidden sm:block">
+              <AiOutlineHome className="text-gray-700 text-2xl" />
+            </Link>
+            <Link to="/messages" className="hidden sm:block">
+              <AiOutlineMessage className="text-gray-700 text-2xl" />
+            </Link>
+            <Link to="/notifications" className="hidden sm:block">
+              <AiOutlineBell className="text-gray-700 text-2xl" />
+            </Link>
 
-            {/* User Avatar & Menu */}
-            <IconButton onClick={handleMenuOpen}>
-              <Avatar src="/user.jpg" alt="User" />
-            </IconButton>
+            {/* User Avatar */}
+            <button>
+              <img src="/user.jpg" alt="User" className="w-10 h-10 rounded-full" />
+            </button>
           </div>
-        </Toolbar>
-      </AppBar>
+        </div>
+      </header>
 
-      {/* User Dropdown Menu */}
-      <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-      </Menu>
+      {/* Full-Screen Overlay Drawer for Mobile */}
+      <div
+        className={`fixed inset-0 bg-white flex flex-col items-center justify-center z-50 transition-transform duration-300 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:hidden`}
+      >
+        {/* Close Button */}
+        <button onClick={toggleMobileMenu} className="absolute top-5 right-5">
+          <AiOutlineClose className="text-gray-700 text-3xl" />
+        </button>
 
-      {/* Full-Screen Overlay Drawer */}
-      <Drawer anchor="left" open={mobileOpen} onClose={toggleMobileMenu}>
-        <Box className="w-screen h-screen bg-white flex flex-col items-center justify-center text-gray-800 space-y-6">
-          {/* Close Button */}
-          <IconButton
-            onClick={toggleMobileMenu}
-            className="absolute top-5 right-5 text-gray-700"
-          >
-            <AiOutlineClose size={24} />
-          </IconButton>
+        {/* Navigation Links */}
+        <nav className="text-center space-y-6 text-gray-800 text-lg">
+          <Link to="/home" onClick={toggleMobileMenu} className="flex items-center space-x-3">
+            <AiOutlineHome className="text-2xl" />
+            <span>Home</span>
+          </Link>
+          <Link to="/messages" onClick={toggleMobileMenu} className="flex items-center space-x-3">
+            <AiOutlineMessage className="text-2xl" />
+            <span>Messages</span>
+          </Link>
+          <Link to="/notifications" onClick={toggleMobileMenu} className="flex items-center space-x-3">
+            <AiOutlineBell className="text-2xl" />
+            <span>Notifications</span>
+          </Link>
+        </nav>
 
-          {/* Navigation Links */}
-          <List className="w-full text-center">
-            <ListItem button onClick={toggleMobileMenu} component={Link} to="/home">
-              <AiOutlineHome className="mr-3 text-lg" />
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem button onClick={toggleMobileMenu} component={Link} to="/messages">
-              <AiOutlineMessage className="mr-3 text-lg" />
-              <ListItemText primary="Messages" />
-            </ListItem>
-            <ListItem button onClick={toggleMobileMenu} component={Link} to="/notifications">
-              <AiOutlineBell className="mr-3 text-lg" />
-              <ListItemText primary="Notifications" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
+        {/* User Menu */}
+        <div className="mt-8 text-gray-600 space-y-4">
+          <button className="flex items-center space-x-3">
+            <AiOutlineUser className="text-xl" />
+            <span>Profile</span>
+          </button>
+          <button className="flex items-center space-x-3">
+            <AiOutlineSetting className="text-xl" />
+            <span>Settings</span>
+          </button>
+          <button className="flex items-center space-x-3 text-red-500">
+            <AiOutlineLogout className="text-xl" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
     </>
   );
 }
