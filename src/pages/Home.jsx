@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, googleAuthProvider } from '../firebase'; // Import googleAuthProvider from firebase.js
-import { signOut, signInWithPopup } from 'firebase/auth'; // Import Firebase Auth methods
+import { auth, googleAuthProvider } from '../firebase'; 
+import { signOut, signInWithPopup } from 'firebase/auth'; 
 import CreatePostForm from '../components/CreatePostForm';
 import PostFeed from '../components/PostFeed';
-// import LogoutButton from '../components/LogoutButton'; // Reusable LogoutButton component
+import { Avatar, Button, Container, Typography, Box } from '@mui/material';
 
-
-const Home = () => {
+function Home() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -19,51 +18,70 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
-  // Function to handle Google login
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleAuthProvider); // Sign in using Google popup
-      setUser(result.user); // Set the user data
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      setUser(result.user);
     } catch (error) {
       console.error('Error during Google login:', error);
     }
   };
 
-  // Function to handle logout
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Sign the user out
-      navigate('/login'); // Redirect to login page after logout
+      await signOut(auth);
+      navigate('/login');
     } catch (error) {
       console.error('Error logging out: ', error);
     }
   };
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1>Welcome to Samazik Sandesh</h1>
-        {user ? <p>Hello, {user.displayName || 'User'}</p> : <p>Please log in to see your feed.</p>}
-      </header>
-      <div className="user-section">
+    <Container maxWidth="md" className="py-10">
+      {/* Header Section */}
+      <Box className="text-center mb-6">
+        <Typography variant="h4" className="font-bold text-gray-800">
+          Welcome to Samazik Sandesh
+        </Typography>
+        <Typography variant="body1" className="text-gray-600">
+          {user ? `Hello, ${user.displayName || 'User'} 👋` : 'Please log in to see your feed.'}
+        </Typography>
+      </Box>
+
+      {/* User Section */}
+      <Box className="flex flex-col items-center justify-center gap-4">
         {user ? (
-          <>
-            <div className="avatar">
-              <img src={user.photoURL} alt="User Avatar" />
-            </div>
-            <button className="button" onClick={handleLogout}>Logout</button>
-          </>
+          <Box className="flex items-center gap-4">
+            <Avatar src={user.photoURL} alt="User Avatar" className="w-12 h-12" />
+            <Button 
+              onClick={handleLogout} 
+              variant="contained" 
+              color="secondary"
+              className="px-5 py-2"
+            >
+              Logout
+            </Button>
+          </Box>
         ) : (
-          <button className="button" onClick={handleGoogleLogin}>Login with Google</button>
+          <Button 
+            onClick={handleGoogleLogin} 
+            variant="contained" 
+            color="primary"
+            className="px-5 py-2"
+          >
+            Login with Google
+          </Button>
         )}
-      </div>
+      </Box>
+
+      {/* Post Section */}
       {user && (
-        <div className="content">
+        <Box className="mt-10">
           <CreatePostForm />
           <PostFeed />
-        </div>
+        </Box>
       )}
-    </div>
+    </Container>
   );
 };
 
