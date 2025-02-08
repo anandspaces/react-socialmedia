@@ -1,8 +1,7 @@
-// src/components/CreatePostForm.jsx
 import { useState } from 'react';
 import { db, auth } from '../firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { Button, TextField, Box, Typography } from '@mui/material';
+import { Button, TextField, Box, Typography, CircularProgress } from '@mui/material';
 
 const CreatePostForm = () => {
   const [newPost, setNewPost] = useState('');
@@ -27,7 +26,6 @@ const CreatePostForm = () => {
         is_deleted: false,
       });
       setNewPost('');
-      console.log(`Post created successfully: ${auth.currentUser?.uid}`);
     } catch (error) {
       console.error('Error creating post: ', error);
       setError('Failed to create post. Please try again later.');
@@ -40,46 +38,43 @@ const CreatePostForm = () => {
     <Box
       component="form"
       onSubmit={handlePostSubmit}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 2,
-        width: '100%',
-        maxWidth: 600,
-        margin: '0 auto',
-        p: 2,
-        bgcolor: 'background.paper',
-        borderRadius: 2,
-        boxShadow: 1,
-        marginBottom:10,
-        marginTop:10,
-      }}
+      className="w-full max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col gap-4 mt-6 transition-all duration-300"
     >
-      <Typography variant="h6" gutterBottom>
-        Create a New Post
+      {/* Heading */}
+      <Typography variant="h6" className="text-gray-800 text-center font-semibold">
+        Share Your Thoughts
       </Typography>
+
+      {/* Text Input */}
       <TextField
         value={newPost}
         onChange={(e) => setNewPost(e.target.value)}
         placeholder="What's on your mind?"
         multiline
-        rows={4}
+        rows={3}
         fullWidth
         variant="outlined"
         error={Boolean(error)}
         helperText={error}
-        aria-label="Post content"
+        inputProps={{ maxLength: 500 }}
+        className="transition-all duration-200"
       />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        disabled={loading}
-        sx={{ alignSelf: 'flex-end' }}
-      >
-        {loading ? 'Posting...' : 'Post'}
-      </Button>
+
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center">
+        <Typography variant="caption" className="text-gray-500">
+          {newPost.length}/500
+        </Typography>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          className="transition-all duration-200"
+        >
+          {loading ? <CircularProgress size={20} className="text-white" /> : 'Post'}
+        </Button>
+      </div>
     </Box>
   );
 };
