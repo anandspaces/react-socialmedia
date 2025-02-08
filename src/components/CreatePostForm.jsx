@@ -1,81 +1,81 @@
-import { useState } from 'react';
-import { db, auth } from '../firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { Button, TextField, Box, Typography, CircularProgress } from '@mui/material';
+import { useState } from "react";
+import { db, auth } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const CreatePostForm = () => {
-  const [newPost, setNewPost] = useState('');
+  const [newPost, setNewPost] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     if (!newPost.trim()) {
-      setError('Post content cannot be empty.');
+      setError("Post content cannot be empty.");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      await addDoc(collection(db, 'posts'), {
+      await addDoc(collection(db, "posts"), {
         content: newPost,
-        userId: auth.currentUser?.uid || 'Anonymous',
+        userId: auth.currentUser?.uid || "Anonymous",
         createdAt: serverTimestamp(),
         is_deleted: false,
       });
-      setNewPost('');
+      setNewPost("");
     } catch (error) {
-      console.error('Error creating post: ', error);
-      setError('Failed to create post. Please try again later.');
+      console.error("Error creating post: ", error);
+      setError("Failed to create post. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box
-      component="form"
+    <form
       onSubmit={handlePostSubmit}
-      className="w-full max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col gap-4 mt-6 transition-all duration-300"
+      className="w-full max-w-lg mx-auto p-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col gap-4 mt-6 transition-all duration-300"
     >
       {/* Heading */}
-      <Typography variant="h6" className="text-gray-800 text-center font-semibold">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center">
         Share Your Thoughts
-      </Typography>
+      </h2>
 
       {/* Text Input */}
-      <TextField
+      <textarea
         value={newPost}
         onChange={(e) => setNewPost(e.target.value)}
         placeholder="What's on your mind?"
-        multiline
         rows={3}
-        fullWidth
-        variant="outlined"
-        error={Boolean(error)}
-        helperText={error}
-        inputProps={{ maxLength: 500 }}
-        className="transition-all duration-200"
-      />
+        maxLength={500}
+        className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white transition"
+      ></textarea>
+
+      {/* Error Message */}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       {/* Action Buttons */}
       <div className="flex justify-between items-center">
-        <Typography variant="caption" className="text-gray-500">
-          {newPost.length}/500
-        </Typography>
-        <Button
+        <span className="text-gray-500 dark:text-gray-400 text-sm">{newPost.length}/500</span>
+        <button
           type="submit"
-          variant="contained"
-          color="primary"
           disabled={loading}
-          className="transition-all duration-200"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md transition flex items-center gap-2"
         >
-          {loading ? <CircularProgress size={20} className="text-white" /> : 'Post'}
-        </Button>
+          {loading ? (
+            <>
+              <AiOutlineLoading3Quarters className="animate-spin" />
+              Posting...
+            </>
+          ) : (
+            "Post"
+          )}
+        </button>
       </div>
-    </Box>
+    </form>
   );
 };
 
