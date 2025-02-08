@@ -4,7 +4,7 @@ import { auth, googleAuthProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 
-const Login = () => {
+function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
