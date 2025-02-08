@@ -1,9 +1,9 @@
-import { AppBar, Toolbar, IconButton, InputBase, Avatar, Menu, MenuItem, Drawer, List, ListItem, ListItemText } from "@mui/material";
-import { Home, Message, Notifications, Menu as MenuIcon, Search } from "@mui/icons-material";
 import { useState } from "react";
+import { AppBar, Toolbar, IconButton, InputBase, Avatar, Menu, MenuItem, Drawer, List, ListItem, ListItemText } from "@mui/material";
+import { AiOutlineHome, AiOutlineMessage, AiOutlineBell, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 
 export default function Header() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const open = Boolean(anchorEl);
 
@@ -18,7 +18,7 @@ export default function Header() {
         {/* Left Section: Logo + Mobile Menu */}
         <div className="flex items-center space-x-3">
           <IconButton className="sm:hidden" onClick={toggleMobileMenu}>
-            <MenuIcon className="text-gray-700" />
+            <AiOutlineMenu className="text-gray-700 text-xl" />
           </IconButton>
           <img src="/logo.png" alt="Logo" className="h-10 w-10" />
           <span className="text-lg font-bold text-gray-800 hidden sm:block">SocialApp</span>
@@ -26,7 +26,7 @@ export default function Header() {
 
         {/* Center: Search Bar (Hidden on Small Screens) */}
         <div className="relative hidden md:flex items-center bg-gray-100 rounded-md px-3 py-1 w-1/3">
-          <Search className="text-gray-500 mr-2" />
+          <AiOutlineSearch className="text-gray-500 mr-2 text-lg" />
           <InputBase
             placeholder="Search..."
             className="text-gray-700 outline-none flex-1"
@@ -36,13 +36,13 @@ export default function Header() {
         {/* Right Section: Icons + Profile */}
         <div className="flex items-center space-x-4">
           <IconButton>
-            <Home className="text-gray-700" />
+            <AiOutlineHome className="text-gray-700 text-xl" />
           </IconButton>
           <IconButton>
-            <Message className="text-gray-700" />
+            <AiOutlineMessage className="text-gray-700 text-xl" />
           </IconButton>
           <IconButton>
-            <Notifications className="text-gray-700" />
+            <AiOutlineBell className="text-gray-700 text-xl" />
           </IconButton>
 
           {/* User Avatar & Menu */}
@@ -63,12 +63,15 @@ export default function Header() {
       <Drawer anchor="left" open={mobileOpen} onClose={toggleMobileMenu}>
         <List className="w-60">
           <ListItem button onClick={toggleMobileMenu}>
+            <AiOutlineHome className="mr-3 text-lg" />
             <ListItemText primary="Home" />
           </ListItem>
           <ListItem button onClick={toggleMobileMenu}>
+            <AiOutlineMessage className="mr-3 text-lg" />
             <ListItemText primary="Messages" />
           </ListItem>
           <ListItem button onClick={toggleMobileMenu}>
+            <AiOutlineBell className="mr-3 text-lg" />
             <ListItemText primary="Notifications" />
           </ListItem>
         </List>
