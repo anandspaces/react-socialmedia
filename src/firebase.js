@@ -1,28 +1,28 @@
-// Import the functions you need from the SDKs you need
+// Import the necessary Firebase modules
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Use environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDoTSDYIjbE0T_COkKFcUAR72WPzMOw940",
-  authDomain: "social-media-4004.firebaseapp.com",
-  projectId: "social-media-4004",
-  storageBucket: "social-media-4004.firebasestorage.app",
-  messagingSenderId: "815049675126",
-  appId: "1:815049675126:web:9cb5f95b35aed4f0162a57",
-  measurementId: "G-W2JPVZW8E3"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication and Google Provider
+// Firebase Authentication and Google Provider
 const auth = getAuth(app);
 const googleAuthProvider = new GoogleAuthProvider();
 
-// Initialize Firestore
+// Firestore Database
 const db = getFirestore(app);
 
-// Export the instances for use in other files
+// Export for use in other files
 export { app, auth, googleAuthProvider, db };
